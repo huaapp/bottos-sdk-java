@@ -1,4 +1,4 @@
-package com.bottos.botc.sdk.utils.crypto;
+﻿package com.bottos.botc.sdk.utils.crypto;
 
 import com.bottos.botc.sdk.exceptions.MessageDecodingException;
 import com.bottos.botc.sdk.exceptions.MessageEncodingException;
@@ -16,7 +16,8 @@ import java.util.Arrays;
  */
 public final class Numeric {
 
-    private static final String HEX_PREFIX = "0x";
+    private static final String HEX_PREFIX = "04";
+//    private static final String HEX_PREFIX = "0x";
 
     private Numeric() {
     }
