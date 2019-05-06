@@ -1,4 +1,4 @@
-package com.bottos.botc.sdk.wallet;
+﻿package com.bottos.botc.sdk.wallet;
 
 import com.bottos.botc.sdk.BotcManger;
 import com.bottos.botc.sdk.Config.Constants;
@@ -50,7 +50,7 @@ public class WalletServiceImp implements WalletService {
             @Override
             public void onNext(BlockHeight blockHeight) {
                 RequestDataSign sendTransactionRequest = new RequestDataSign();
-                sendTransactionRequest.setVersion(1);
+                sendTransactionRequest.setVersion(blockHeight.getHead_block_version());
                 sendTransactionRequest.setCursor_label(blockHeight.getCursor_label());
                 sendTransactionRequest.setCursor_num(blockHeight.getHead_block_num());
                 sendTransactionRequest.setLifetime(blockHeight.getHead_block_time() + 30);
@@ -82,19 +82,22 @@ public class WalletServiceImp implements WalletService {
             @Override
             public void onNext(BlockHeight blockHeight) {
                 RequestDataSign sendTransactionRequest = new RequestDataSign();
-                sendTransactionRequest.setVersion(1);
+                sendTransactionRequest.setVersion(blockHeight.getHead_block_version());
                 sendTransactionRequest.setCursor_label(blockHeight.getCursor_label());
                 sendTransactionRequest.setCursor_num(blockHeight.getHead_block_num());
-                sendTransactionRequest.setLifetime(blockHeight.getHead_block_time() + 30);
+                sendTransactionRequest.setLifetime(blockHeight.getHead_block_time() + 60);
+
                 sendTransactionRequest.setSender(fromUser);
                 sendTransactionRequest.setMethod(Constants.SEND_TRANSACTION_METHOD);
                 sendTransactionRequest.setContract(Constants.SEND_TRANSACTION_CONTRACT);
                 sendTransactionRequest.setSig_alg(1);
                 SendTransactionParamsRequest param = new SendTransactionParamsRequest();
-                param.setTo(toUser);
                 param.setFrom(fromUser);
+                param.setTo(toUser);
                 param.setPrice(price);
+                param.setMemo(memo);
                 long[] params = SendTransactionParamsRequest.getPackParam(param);
+
                 sendTransactionRequest.setParam(CryptTool.getHex16(params));
                 RequestDataSign.getSignaturedFetchParam(sendTransactionRequest,params, privateKey, blockHeight.getChain_id());
                 BotcManger.getInstance().getApiWrapper().sendTransaction(sendTransactionRequest, requestCallBackImp);
